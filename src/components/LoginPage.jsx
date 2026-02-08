@@ -4,12 +4,13 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase/config';
 import { 
     Alert,
-Box,
-Button,
-Divider, 
-Paper , Stack,
-TextField, 
-Typography 
+    Box,
+    Button,
+    Divider, 
+    Paper, 
+    Stack,
+    TextField, 
+    Typography 
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -19,26 +20,23 @@ import img2 from '../assets/img2.png';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-
-
 export const Login = () => {
-
     const [showPassword, setShowPassword] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [error, setError] = useState({});
     const [authError, setAuthError] = useState("");
     const navigate = useNavigate();
 
     const handleClickShowPassword = () => setShowPassword(!showPassword);
 
-    //email validation
+    // Email validation
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
 
-    // Handle Google Sign-In
+    // Handle regular login
     const handlelogin = (e) => {
         e.preventDefault();
         const newError = {};
@@ -59,7 +57,7 @@ export const Login = () => {
 
         if (Object.keys(newError).length === 0) {
             setAuthError("");
-            alert("Login successful!"); 
+            alert("Login successful! (No backend connected)"); 
         }
     };
 
@@ -70,11 +68,11 @@ export const Login = () => {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            //get access token
+            // Get access token
             const accessToken = await user.getIdToken();
 
-            //navigate to dashboard
-            navigate('/TokenDisplay', {
+            // Navigate to TokenDisplay
+            navigate('/dashboard', {
                 state: {
                     accessToken: accessToken,
                     user: {
@@ -108,132 +106,188 @@ export const Login = () => {
                 left: 0
             }}
         >
-        <Paper 
-            elevation={0}
-            sx={{ 
-                width: "110%", 
-                maxWidth: "1000px",
-                minHeight: "700px", 
-                display: "flex", 
-                borderRadius: 3, 
-                overflow: "hidden",
-                gap: 4,
-                m: "auto" 
-            }}
-        >
+            <Paper 
+                elevation={0}
+                sx={{ 
+                    width: "110%", 
+                    maxWidth: "1000px",
+                    minHeight: "700px", 
+                    display: "flex", 
+                    borderRadius: 3, 
+                    overflow: "hidden",
+                    gap: 4,
+                    m: "auto",
+                    flexDirection: { xs: "column", md: "row" }
+                }}
+            >
                 {/* Left side */}
-                <Box sx={{ flex: 1, p: 4, display: "flex", flexDirection: "column",   alignItems: "center"  }}>
-                    <Stack spacing={3} sx={{ height: "100%" }}>
-                    <Typography variant='h4' fontWeight='bold' sx={{ mb: 4, textAlign: "center" }}>
-                        Welcome back!
-                    </Typography>
-
-                  
-                    <Typography sx={{ mt: 4, textAlign: "center",maxWidth: "380px" }}>
-                        Simplify your workflow and boost your productivity with <b>Tuga's App</b>. Get started for free.
-                    </Typography>
-
-
-                    {authError && (
-                        <Alert severity="error" onClose={() => setAuthError("")} sx={{ mt: 2 }}>
-                            {authError}
-                        </Alert>
-                    )}
-
-                    <form onSubmit={handlelogin}>
-                        <TextField fullWidth label="Username" margin='normal'
-                        value={username}
-                        onChange={(e) => {
-                            setUsername(e.target.value);
-                            if (error.username) {
-                                setError(prev => ({ ...prev, username: "" }));
-                            }
-                        }} 
-                        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 8 }, "& .MuiInputLabel-root": {left: 15} }}/>
-                        
-                        <TextField fullWidth label="Password" type={showPassword ? "text" : "password"} margin='normal'
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            if (error.password) {
-                                setError(prev => ({ ...prev, password: "" }));
-                            }
-                        }}
-                        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 8 }, "& .MuiInputLabel-root": {left: 15} }}
-                        InputProps={{
-                            endAdornment: (
-                                <IconButton onClick={handleClickShowPassword}>
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            )
-                        }} />
-
-                        <Typography variant='body2' align='right' color='black' sx={{ mt: 2, cursor: "pointer" }}>
-                            Forgot Password?
+                <Box sx={{ 
+                    flex: 1, 
+                    p: 4, 
+                    display: "flex", 
+                    flexDirection: "column",   
+                    alignItems: "center"  
+                }}>
+                    <Stack spacing={3} sx={{ width: "100%", maxWidth: "400px" }}>
+                        <Typography variant='h4' fontWeight='bold' sx={{ mb: 2, textAlign: "center" }}>
+                            Welcome back!
                         </Typography>
 
-                        <Button fullWidth variant='contained' 
-                            sx={{ 
-                                mt: 3, 
-                                borderRadius: 8, 
-                                bgcolor: "#000", 
-                                textTransform: "none", 
-                                '&:hover': { 
-                                bgcolor: "#000000",
-                                transform: "translateY(-4px)",
-                                } 
-                            }}
+                        <Typography sx={{ textAlign: "center", maxWidth: "380px", mx: "auto" }}>
+                            Simplify your workflow and boost your productivity with <b>Tuga's App</b>. Get started for free.
+                        </Typography>
+
+                        {authError && (
+                            <Alert severity="error" onClose={() => setAuthError("")}>
+                                {authError}
+                            </Alert>
+                        )}
+
+                        <form onSubmit={handlelogin}>
+                            <TextField 
+                                fullWidth 
+                                label="Username" 
+                                margin='normal'
+                                value={username}
+                                onChange={(e) => {
+                                    setUsername(e.target.value);
+                                    if (error.username) {
+                                        setError(prev => ({ ...prev, username: "" }));
+                                    }
+                                }}
+                                error={!!error.username}
+                                helperText={error.username}
+                                sx={{ 
+                                    '& .MuiOutlinedInput-root': { borderRadius: 8 }, 
+                                    "& .MuiInputLabel-root": { left: 15 } 
+                                }}
+                            />
+                            
+                            <TextField 
+                                fullWidth 
+                                label="Password" 
+                                type={showPassword ? "text" : "password"} 
+                                margin='normal'
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    if (error.password) {
+                                        setError(prev => ({ ...prev, password: "" }));
+                                    }
+                                }}
+                                error={!!error.password}
+                                helperText={error.password}
+                                sx={{ 
+                                    '& .MuiOutlinedInput-root': { borderRadius: 8 }, 
+                                    "& .MuiInputLabel-root": { left: 15 } 
+                                }}
+                                InputProps={{
+                                    endAdornment: (
+                                        <IconButton onClick={handleClickShowPassword} edge="end">
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    )
+                                }} 
+                            />
+
+                            <Typography 
+                                variant='body2' 
+                                align='right' 
+                                color='black' 
+                                sx={{ mt: 2, cursor: "pointer" }}
                             >
-                            Login
-                        </Button>
-                    </form>
+                                Forgot Password?
+                            </Typography>
 
+                            <Button 
+                                fullWidth 
+                                variant='contained'
+                                type='submit'
+                                sx={{ 
+                                    mt: 3,
+                                    py: 1.5,
+                                    borderRadius: 8, 
+                                    bgcolor: "#000", 
+                                    textTransform: "none",
+                                    fontSize: "16px",
+                                    '&:hover': { 
+                                        bgcolor: "#333",
+                                        transform: "translateY(-2px)",
+                                    } 
+                                }}
+                            >
+                                Login
+                            </Button>
+                        </form>
 
-                    <Divider sx={{ my: 3}}>or continue with</Divider>
+                        <Divider sx={{ my: 3 }}>or continue with</Divider>
 
-                    <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-                        <IconButton onClick={handleGoogleSignIn} sx={{ bgcolor: "black", color:"white", '&:hover': { bgcolor: "#333" } }}>
-                        <GoogleIcon />
-                        </IconButton>
-                        <IconButton sx={{ bgcolor: "black", color:"white", '&:hover': { bgcolor: "#333" } }}>
-                        <AppleIcon />
-                        </IconButton>
-                        <IconButton sx={{ bgcolor: "black", color:"white", '&:hover': { bgcolor: "#333" } }}>
-                        <FacebookIcon />
-                        </IconButton>
-                    </Box>
+                        <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+                            <IconButton 
+                                onClick={handleGoogleSignIn}
+                                sx={{ 
+                                    bgcolor: "black", 
+                                    color: "white", 
+                                    '&:hover': { bgcolor: "#333" } 
+                                }}
+                            >
+                                <GoogleIcon />
+                            </IconButton>
+                            <IconButton 
+                                disabled
+                                sx={{ 
+                                    bgcolor: "black", 
+                                    color: "white", 
+                                    '&:hover': { bgcolor: "#333" },
+                                    opacity: 0.6,
+                                    cursor: "not-allowed"
+                                }}
+                            >
+                                <AppleIcon />
+                            </IconButton>
+                            <IconButton 
+                                disabled
+                                sx={{ 
+                                    bgcolor: "black", 
+                                    color: "white", 
+                                    '&:hover': { bgcolor: "#333" },
+                                    opacity: 0.6,
+                                    cursor: "not-allowed"
+                                }}
+                            >
+                                <FacebookIcon />
+                            </IconButton>
+                        </Box>
 
-                    {/* Spacer Box */}
-                    <Box sx={{ flexGrow: 1 }} />  
+                        {/* Spacer Box */}
+                        <Box sx={{ flexGrow: 1 }} />  
 
-                    <Typography align="center" mt={3}>
-                        Not a member?{" "} 
-                        <Typography component="span" color="#49a552" sx={{cursor: "pointer"}}>
-                        Register now
+                        <Typography align="center" mt={3}>
+                            Not a member?{" "} 
+                            <Typography component="span" color="#49a552" sx={{ cursor: "pointer" }}>
+                                Register now
+                            </Typography>
                         </Typography>
-                    </Typography>
-                
-                </Stack>
+                    </Stack>
                 </Box>
-                
 
                 {/* Right side */}
                 <Box sx={{
-                    flex:1,
-                    p:4,borderRadius: 6, 
-                    bgcolor:"#e6efe7", 
-                    display:"flex", 
-                    alignItems:"center", 
-                    justifyContent:"center",
-                    flexDirection:"column"
+                    flex: 1,
+                    p: 4,
+                    borderRadius: 6, 
+                    bgcolor: "#e6efe7", 
+                    display: { xs: "none", md: "flex" }, 
+                    alignItems: "center", 
+                    justifyContent: "center",
+                    flexDirection: "column"
                 }}>
-                    
                     <Box
                         component="img"
                         src={img2}
-                        alt='logo'
-                        sx={{ width: "100%", maxWidth: 300, height: "auto"}}/>
-                    
+                        alt='Illustration'
+                        sx={{ width: "100%", maxWidth: 300, height: "auto", mb: 3 }}
+                    />
                     
                     <Typography variant='h6' align='center'>
                         Make your work easier and organized with <b>Tuga's App</b>
