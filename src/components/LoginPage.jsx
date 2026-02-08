@@ -155,8 +155,6 @@ export const Login = () => {
                                         setError(prev => ({ ...prev, username: "" }));
                                     }
                                 }}
-                                error={!!error.username}
-                                helperText={error.username}
                                 sx={{ 
                                     '& .MuiOutlinedInput-root': { borderRadius: 8 }, 
                                     "& .MuiInputLabel-root": { left: 3 } 
@@ -175,8 +173,6 @@ export const Login = () => {
                                         setError(prev => ({ ...prev, password: "" }));
                                     }
                                 }}
-                                error={!!error.password}
-                                helperText={error.password}
                                 sx={{ 
                                     '& .MuiOutlinedInput-root': { borderRadius: 8 }, 
                                     "& .MuiInputLabel-root": { left: 3 } 
