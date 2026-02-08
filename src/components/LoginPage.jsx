@@ -159,7 +159,7 @@ export const Login = () => {
                                 helperText={error.username}
                                 sx={{ 
                                     '& .MuiOutlinedInput-root': { borderRadius: 8 }, 
-                                    "& .MuiInputLabel-root": { left: 15 } 
+                                    "& .MuiInputLabel-root": { left: 3 } 
                                 }}
                             />
                             
@@ -179,7 +179,7 @@ export const Login = () => {
                                 helperText={error.password}
                                 sx={{ 
                                     '& .MuiOutlinedInput-root': { borderRadius: 8 }, 
-                                    "& .MuiInputLabel-root": { left: 15 } 
+                                    "& .MuiInputLabel-root": { left: 3 } 
                                 }}
                                 InputProps={{
                                     endAdornment: (
@@ -234,25 +234,19 @@ export const Login = () => {
                                 <GoogleIcon />
                             </IconButton>
                             <IconButton 
-                                disabled
                                 sx={{ 
                                     bgcolor: "black", 
                                     color: "white", 
                                     '&:hover': { bgcolor: "#333" },
-                                    opacity: 0.6,
-                                    cursor: "not-allowed"
                                 }}
                             >
                                 <AppleIcon />
                             </IconButton>
                             <IconButton 
-                                disabled
                                 sx={{ 
                                     bgcolor: "black", 
                                     color: "white", 
                                     '&:hover': { bgcolor: "#333" },
-                                    opacity: 0.6,
-                                    cursor: "not-allowed"
                                 }}
                             >
                                 <FacebookIcon />
